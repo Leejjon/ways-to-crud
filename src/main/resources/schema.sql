@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS PERSON(
+    id INT NOT NULL IDENTITY,
+    name VARCHAR(50) NOT NULL,
+    dateOfBirth DATE NOT NULL,
+    heightInMeters DOUBLE NOT NULL,
+    PRIMARY KEY(id)
+);

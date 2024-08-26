@@ -11,4 +11,8 @@ class JdbcTemplateService(
     fun getPersonsFromDb(): List<Person> {
         return jdbcTemplate.query("SELECT * FROM PERSON", PersonRowMapper())
     }
+
+    fun getPerson(id: Int): Person? {
+        return jdbcTemplate.queryForObject("SELECT * FROM PERSON WHERE id = ?", PersonRowMapper(), id)
+    }
 }

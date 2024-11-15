@@ -37,7 +37,7 @@ class WaysToCrudIntegrationTests {
 
 
 	@Test
-	fun `Verify that the GET request on the v1 persons endpoint that uses the Jdbc Rest template returns Messi and Ronaldo`() {
+	fun `Verify that the GET request on the v1 persons endpoint that uses the JdbcClient returns Messi and Ronaldo`() {
 		val response = Given {
 			spec(requestSpecification)
 		} When {
@@ -52,6 +52,21 @@ class WaysToCrudIntegrationTests {
 		assertMessi(response.persons.first())
 		assertRonaldo(response.persons.last())
 
+	}
+
+	@Test
+	fun `Verify that the GET request on the v1 single person endpoint that uses the JdbcClient returns Messi`() {
+		val response = Given {
+			spec(requestSpecification)
+		} When {
+			get("/v1/persons/0")
+		} Then {
+			statusCode(200)
+		} Extract {
+			body().`as`(Person::class.java)
+		}
+
+		assertMessi(response)
 	}
 
 	private fun assertMessi(messi: Person) {

@@ -40,4 +40,20 @@ class DatabaseService(
         }
     }
 
+    fun deletePerson(id: Int) {
+        val update = try {
+            jdbcClient.sql("DELETE FROM PERSON WHERE ID = :id")
+                .params(id)
+                .update()
+        } catch (e: Exception) {
+            logger.error(e) { "Unable to delete person due to error with the query or connection" }
+            throw ResponseStatusException(HttpStatusCode.valueOf(500));
+        }
+        if (update == 1) {
+            return
+        } else {
+            logger.error { "Could not find person with id $id" }
+            throw ResponseStatusException(HttpStatusCode.valueOf(404));
+        }
+    }
 }

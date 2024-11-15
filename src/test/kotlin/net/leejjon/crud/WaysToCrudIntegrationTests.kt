@@ -12,13 +12,15 @@ import net.leejjon.crud.model.Person
 import net.leejjon.crud.model.Persons
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.test.annotation.DirtiesContext
 import java.time.LocalDate
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = [WaysToCrudApplication::class])
-//@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-//@AutoConfigureTestDatabase(replace = Replace.ANY)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class WaysToCrudIntegrationTests {
     private val logger = KotlinLogging.logger {}
 
@@ -95,6 +97,33 @@ class WaysToCrudIntegrationTests {
 
         assertNeymar(response)
     }
+
+    @Test
+    fun `Verify that the DELETE request on the v1 persons endpoint deletes the user and returns 200`() {
+        Given {
+            spec(requestSpecification)
+        } When {
+            delete("/v1/persons/1")
+        } Then {
+            statusCode(200)
+        }
+
+        // Verify if there is one less person
+        val response = Given {
+            spec(requestSpecification)
+        } When {
+            get("/v1/persons")
+        } Then {
+            statusCode(200)
+        } Extract {
+            body().`as`(Persons::class.java)
+        }
+
+        assertThat(response.persons).hasSize(1)
+        assertMessi(response.persons.first())
+    }
+
+
 
     private fun assertMessi(messi: Person) {
         assertThat(messi.name).isEqualTo(MESSI_NAME)

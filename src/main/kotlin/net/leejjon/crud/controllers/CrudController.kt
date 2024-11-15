@@ -6,6 +6,7 @@ import net.leejjon.crud.database.DatabaseService
 import net.leejjon.crud.model.Person
 import net.leejjon.crud.model.Persons
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -21,6 +22,13 @@ class CrudController(
         return ResponseEntity.ok(Persons(databaseService.getPersonsFromDb()))
     }
 
+    @ApiResponses(value =
+        [
+            ApiResponse(responseCode = "200"),
+            ApiResponse(responseCode = "404", description = "User not found"),
+            ApiResponse(responseCode = "500", description = "Internal Server Error")
+        ]
+    )
     @GetMapping("/v1/persons/{id}")
     fun getPerson(
         @PathVariable
@@ -42,5 +50,19 @@ class CrudController(
     fun createPerson(@RequestBody person: Person): ResponseEntity<Person> {
         val createdPerson = databaseService.createPerson(person)
         return ResponseEntity.ok().body(createdPerson)
+    }
+
+    @ApiResponses(value =
+        [
+            ApiResponse(responseCode = "200"),
+            ApiResponse(responseCode = "404", description = "User not found"),
+            ApiResponse(responseCode = "500", description = "Internal Server Error")
+        ]
+    )
+    @DeleteMapping("/v1/persons/{id}")
+    fun deletePerson(
+        @PathVariable id: Int
+    ) {
+        databaseService.deletePerson(id)
     }
 }

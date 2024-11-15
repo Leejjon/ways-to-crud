@@ -1,6 +1,6 @@
 package net.leejjon.crud.controllers
 
-import net.leejjon.crud.jdbc.template.DatabaseService
+import net.leejjon.crud.database.DatabaseService
 import net.leejjon.crud.model.Person
 import net.leejjon.crud.model.Persons
 import org.springframework.http.ResponseEntity

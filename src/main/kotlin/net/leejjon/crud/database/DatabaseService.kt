@@ -1,4 +1,4 @@
-package net.leejjon.crud.jdbc.template
+package net.leejjon.crud.database
 
 import net.leejjon.crud.model.Person
 import org.springframework.jdbc.core.simple.JdbcClient

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController("/v1")
-class CrudController(
+class PersonController(
     private val databaseService: DatabaseService,
 ) {
     @GetMapping("/v1/persons")

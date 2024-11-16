@@ -36,7 +36,7 @@ class DatabaseService(
             return getPerson(keyHolder.getKeyAs(Integer::class.java)?.toInt()!!)
         } else {
             logger.error { "Unable to create person $person" }
-            throw ResponseStatusException(HttpStatusCode.valueOf(500));
+            throw ResponseStatusException(HttpStatusCode.valueOf(500))
         }
     }
 
@@ -47,13 +47,36 @@ class DatabaseService(
                 .update()
         } catch (e: Exception) {
             logger.error(e) { "Unable to delete person due to error with the query or connection" }
-            throw ResponseStatusException(HttpStatusCode.valueOf(500));
+            throw ResponseStatusException(HttpStatusCode.valueOf(500))
         }
         if (update == 1) {
             return
         } else {
             logger.error { "Could not find person with id $id" }
-            throw ResponseStatusException(HttpStatusCode.valueOf(404));
+            throw ResponseStatusException(HttpStatusCode.valueOf(404))
+        }
+    }
+
+    fun updatePerson(person: Person): Person {
+        val update = try {
+            jdbcClient.sql("UPDATE PERSON SET name = :name, dateOfBirth = :dateOfBirth, heightInMeters = :heightInMeters WHERE id = :id")
+                .params(person.name, person.dateOfBirth, person.heightInMeters, person.id)
+                .update()
+        } catch (e: Exception) {
+            logger.error(e) { "Unable to delete person due to error with the query or connection" }
+            throw ResponseStatusException(HttpStatusCode.valueOf(500))
+        }
+        if (update == 1) {
+            val personFromDb = getPerson(person.id)
+            if (personFromDb != null) {
+                return personFromDb
+            } else {
+                logger.error { "Could not update person with id $person.id" }
+                throw ResponseStatusException(HttpStatusCode.valueOf(404))
+            }
+        } else {
+            logger.error { "Could not update person with id $person.id" }
+            throw ResponseStatusException(HttpStatusCode.valueOf(404))
         }
     }
 }

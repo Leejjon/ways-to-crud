@@ -1,6 +1,5 @@
 package net.leejjon.crud
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.restassured.http.ContentType
 import io.restassured.module.kotlin.extensions.Extract
 import org.junit.jupiter.api.Test
@@ -19,10 +18,10 @@ import org.springframework.test.annotation.DirtiesContext
 import java.time.LocalDate
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = [WaysToCrudApplication::class])
+// Thank stackoverflow for telling me to put these annotations: https://stackoverflow.com/questions/34617152/how-to-re-create-database-before-each-test-in-spring
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class WaysToCrudIntegrationTests {
-    private val logger = KotlinLogging.logger {}
 
     private lateinit var requestSpecification: RequestSpecification
 
@@ -58,7 +57,6 @@ class WaysToCrudIntegrationTests {
         assertThat(response.persons).hasSize(2)
         assertMessi(response.persons.first())
         assertRonaldo(response.persons.last())
-
     }
 
     @Test
@@ -123,7 +121,28 @@ class WaysToCrudIntegrationTests {
         assertMessi(response.persons.first())
     }
 
-
+    @Test
+    fun `Verify that the PUT request on the v1 persons endpoint updates the user and returns 200`() {
+        val response = Given {
+            spec(requestSpecification)
+        } When {
+            // Update ronaldo to neymar
+            body("""
+                {
+                  "id": "1",
+                  "name": "$NEYMAR_NAME",
+                  "dateOfBirth": "$NEYMAR_DATE_OF_BIRTH",
+                  "heightInMeters": $NEYMAR_HEIGHT
+                }
+            """.trimIndent())
+            put("/v1/persons")
+        } Then {
+            statusCode(200)
+        } Extract {
+            body().`as`(Person::class.java)
+        }
+        assertNeymar(response)
+    }
 
     private fun assertMessi(messi: Person) {
         assertThat(messi.name).isEqualTo(MESSI_NAME)

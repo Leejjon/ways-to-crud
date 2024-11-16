@@ -21,7 +21,7 @@ import java.time.LocalDate
 // Thank stackoverflow for telling me to put these annotations: https://stackoverflow.com/questions/34617152/how-to-re-create-database-before-each-test-in-spring
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
-class WaysToCrudIntegrationTests {
+class PersonsApiIntegrationTests {
 
     private lateinit var requestSpecification: RequestSpecification
 

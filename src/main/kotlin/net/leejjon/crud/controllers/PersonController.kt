@@ -2,7 +2,7 @@ package net.leejjon.crud.controllers
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import net.leejjon.crud.database.DatabaseService
+import net.leejjon.crud.database.DbService
 import net.leejjon.crud.model.Person
 import net.leejjon.crud.model.Persons
 import org.springframework.http.ResponseEntity
@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController("/v1")
 class PersonController(
-    private val databaseService: DatabaseService,
+    private val dbService: DbService,
 ) {
     @GetMapping("/v1/persons")
     fun listPersons(): ResponseEntity<Persons> {
-        return ResponseEntity.ok(Persons(databaseService.getPersonsFromDb()))
+        return ResponseEntity.ok(Persons(dbService.getPersonsFromDb()))
     }
 
     @ApiResponses(value =
@@ -35,7 +35,7 @@ class PersonController(
         @PathVariable
         id: Int
     ): ResponseEntity<Person> {
-        databaseService.getPerson(id)?.let {
+        dbService.getPerson(id)?.let {
             return ResponseEntity.ok(it)
         }
         return ResponseEntity.notFound().build()
@@ -49,7 +49,7 @@ class PersonController(
     )
     @PostMapping("/v1/persons")
     fun createPerson(@RequestBody person: Person): ResponseEntity<Person> {
-        val createdPerson = databaseService.createPerson(person)
+        val createdPerson = dbService.createPerson(person)
         return ResponseEntity.ok().body(createdPerson)
     }
 
@@ -64,11 +64,11 @@ class PersonController(
     fun deletePerson(
         @PathVariable id: Int
     ) {
-        databaseService.deletePerson(id)
+        dbService.deletePerson(id)
     }
 
     @PutMapping("/v1/persons")
     fun updatePerson(
         @RequestBody person: Person
-    ): ResponseEntity<Person> = ResponseEntity.ok(databaseService.updatePerson(person))
+    ): ResponseEntity<Person> = ResponseEntity.ok(dbService.updatePerson(person))
 }

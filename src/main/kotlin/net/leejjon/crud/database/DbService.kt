@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 
 @Service
-class DatabaseService(
+class DbService(
     private val jdbcClient: JdbcClient
 ) {
     private val logger = KotlinLogging.logger {}

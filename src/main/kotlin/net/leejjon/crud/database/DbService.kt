@@ -1,6 +1,7 @@
 package net.leejjon.crud.database
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import net.leejjon.crud.model.NewPerson
 import net.leejjon.crud.model.Person
 import org.springframework.http.HttpStatusCode
 import org.springframework.jdbc.core.simple.JdbcClient
@@ -19,13 +20,13 @@ class DbService(
             .query(PersonRowMapper())
             .list()
 
-    fun getPerson(id: Int): Person? =
+    fun getPerson(id: Int): java.util.Optional<Person> =
         jdbcClient.sql("SELECT * FROM PERSON WHERE id = :id")
             .params(id)
             .query(PersonRowMapper())
-            .optional().get()
+            .optional()
 
-    fun createPerson(person: Person): Person? {
+    fun createPerson(person: NewPerson): Person? {
         val keyHolder: KeyHolder = GeneratedKeyHolder()
         val update =
             jdbcClient.sql("INSERT INTO PERSON(name, dateOfBirth, heightInMeters) VALUES (:name, :dateOfBirth, :heightInMeters)")
@@ -33,7 +34,13 @@ class DbService(
                 .update(keyHolder)
 
         if (update == 1) {
-            return getPerson(keyHolder.getKeyAs(Integer::class.java)?.toInt()!!)
+            val potentiallyCreatedPerson = getPerson(keyHolder.getKeyAs(Integer::class.java)?.toInt()!!)
+
+            return if (potentiallyCreatedPerson.isPresent) {
+                potentiallyCreatedPerson.get()
+            } else {
+                throw ResponseStatusException(HttpStatusCode.valueOf(404))
+            }
         } else {
             logger.error { "Unable to create person $person" }
             throw ResponseStatusException(HttpStatusCode.valueOf(500))
@@ -68,8 +75,8 @@ class DbService(
         }
         if (update == 1) {
             val personFromDb = getPerson(person.id)
-            if (personFromDb != null) {
-                return personFromDb
+            if (personFromDb.isPresent) {
+                return personFromDb.get()
             } else {
                 logger.error { "Could not update person with id $person.id" }
                 throw ResponseStatusException(HttpStatusCode.valueOf(404))

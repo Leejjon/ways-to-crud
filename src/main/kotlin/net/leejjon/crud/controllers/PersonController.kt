@@ -3,6 +3,7 @@ package net.leejjon.crud.controllers
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import net.leejjon.crud.database.DbService
+import net.leejjon.crud.model.NewPerson
 import net.leejjon.crud.model.Person
 import net.leejjon.crud.model.Persons
 import org.springframework.http.ResponseEntity
@@ -35,10 +36,12 @@ class PersonController(
         @PathVariable
         id: Int
     ): ResponseEntity<Person> {
-        dbService.getPerson(id)?.let {
-            return ResponseEntity.ok(it)
+        val potentiallyExistingPerson = dbService.getPerson(id)
+        return if (potentiallyExistingPerson.isPresent) {
+            ResponseEntity.ok(potentiallyExistingPerson.get())
+        } else {
+            ResponseEntity.notFound().build()
         }
-        return ResponseEntity.notFound().build()
     }
 
     @ApiResponses(value =
@@ -48,7 +51,7 @@ class PersonController(
         ]
     )
     @PostMapping("/v1/persons")
-    fun createPerson(@RequestBody person: Person): ResponseEntity<Person> {
+    fun createPerson(@RequestBody person: NewPerson): ResponseEntity<Person> {
         val createdPerson = dbService.createPerson(person)
         return ResponseEntity.ok().body(createdPerson)
     }

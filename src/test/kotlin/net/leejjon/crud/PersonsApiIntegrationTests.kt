@@ -141,7 +141,7 @@ class PersonsApiIntegrationTests {
         } Extract {
             body().`as`(Person::class.java)
         }
-        assertNeymar(response)
+        assertNeymar(response, 1)
     }
 
     private fun assertMessi(messi: Person) {
@@ -156,7 +156,8 @@ class PersonsApiIntegrationTests {
         assertThat(ronaldo.dateOfBirth).isEqualTo(RONALDO_DATE_OF_BIRTH)
     }
 
-    private fun assertNeymar(neymar: Person) {
+    private fun assertNeymar(neymar: Person, id: Int = 2) {
+        assertThat(neymar.id).isEqualTo(id)
         assertThat(neymar.name).isEqualTo(NEYMAR_NAME)
         assertThat(neymar.heightInMeters).isEqualTo(NEYMAR_HEIGHT)
         assertThat(neymar.dateOfBirth).isEqualTo(NEYMAR_DATE_OF_BIRTH)

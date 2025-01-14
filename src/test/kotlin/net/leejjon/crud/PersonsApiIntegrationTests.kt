@@ -141,7 +141,28 @@ class PersonsApiIntegrationTests {
         } Extract {
             body().`as`(Person::class.java)
         }
-        assertNeymar(response)
+        assertNeymar(response, 1)
+    }
+
+    @Test
+    fun `Verify that the PATCH request on the v1 persons endpoint only updates the height if the request contains just the height`() {
+        val response = Given {
+            spec(requestSpecification)
+        } When {
+            // Let's give Ronaldo Messi's height
+            body("""
+                {
+                    "heightInMeters": $MESSI_HEIGHT
+                }
+            """.trimIndent())
+            patch("/v1/persons/1")
+        } Then {
+            statusCode(200)
+        } Extract {
+            body().`as`(Person::class.java)
+        }
+
+        assertRonaldo(response, MESSI_HEIGHT)
     }
 
     private fun assertMessi(messi: Person) {
@@ -150,13 +171,14 @@ class PersonsApiIntegrationTests {
         assertThat(messi.dateOfBirth).isEqualTo(MESSI_DATE_OF_BIRTH)
     }
 
-    private fun assertRonaldo(ronaldo: Person) {
+    private fun assertRonaldo(ronaldo: Person, height: Double = RONALDO_HEIGHT) {
         assertThat(ronaldo.name).isEqualTo(RONALDO_NAME)
-        assertThat(ronaldo.heightInMeters).isEqualTo(RONALDO_HEIGHT)
+        assertThat(ronaldo.heightInMeters).isEqualTo(height)
         assertThat(ronaldo.dateOfBirth).isEqualTo(RONALDO_DATE_OF_BIRTH)
     }
 
-    private fun assertNeymar(neymar: Person) {
+    private fun assertNeymar(neymar: Person, id: Int = 2) {
+        assertThat(neymar.id).isEqualTo(id)
         assertThat(neymar.name).isEqualTo(NEYMAR_NAME)
         assertThat(neymar.heightInMeters).isEqualTo(NEYMAR_HEIGHT)
         assertThat(neymar.dateOfBirth).isEqualTo(NEYMAR_DATE_OF_BIRTH)

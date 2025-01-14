@@ -10,9 +10,9 @@ import java.time.LocalDate
 
 @Entity(name = "PERSON")
 class PersonEntity(
-    val name: String,
-    val dateOfBirth: LocalDate,
-    val heightInMeters: Double
+    var name: String,
+    var dateOfBirth: LocalDate,
+    var heightInMeters: Double
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

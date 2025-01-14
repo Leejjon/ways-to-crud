@@ -25,9 +25,14 @@ class DbService(
     }
 
     fun updatePerson(person: Person): Person? {
-        val existingPerson: Optional<PersonEntity> = personRepository.findById(person.id)
-        return if (existingPerson.isPresent) {
-            personRepository.save(person.toPersonEntity()).toPerson()
+        val existingPersonOptional: Optional<PersonEntity> = personRepository.findById(person.id)
+
+        return if (existingPersonOptional.isPresent) {
+            val existingPerson = existingPersonOptional.get()
+            existingPerson.name = person.name
+            existingPerson.dateOfBirth = person.dateOfBirth
+            existingPerson.heightInMeters = person.heightInMeters
+            personRepository.save(existingPerson).toPerson()
         } else {
             null
         }

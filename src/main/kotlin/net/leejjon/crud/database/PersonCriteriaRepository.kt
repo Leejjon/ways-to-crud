@@ -13,6 +13,7 @@ class PersonCriteriaRepository(
     @PersistenceContext
     val em: EntityManager
 ) {
+
     @Transactional
     fun updatePersonAttributes(personId: Int, updatedFields: Map<String, Any?>) {
         if (updatedFields.isNotEmpty() && !updatedFields.containsValue(null)) {
@@ -22,7 +23,7 @@ class PersonCriteriaRepository(
             for (fieldToUpdate in updatedFields.entries.iterator()) {
                 val castedFieldToUpdateValue = when (fieldToUpdate.key) {
                     "name" -> fieldToUpdate.value as String
-                    "dateOfBirth" -> fieldToUpdate.value as LocalDate
+                    "dateOfBirth" -> LocalDate.parse(fieldToUpdate.value as String)
                     "heightInMeters" -> fieldToUpdate.value as Double
                     else -> throw ResponseStatusException(HttpStatusCode.valueOf(400))
                 }

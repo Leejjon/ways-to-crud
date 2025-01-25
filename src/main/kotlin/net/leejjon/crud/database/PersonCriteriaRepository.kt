@@ -15,21 +15,25 @@ class PersonCriteriaRepository(
 ) {
     @Transactional
     fun updatePersonAttributes(personId: Int, updatedFields: Map<String, Any?>) {
-        val cb = em.criteriaBuilder
-        val cu = cb.createCriteriaUpdate(PersonEntity::class.java)
-        val person = cu.from(PersonEntity::class.java)
-        for (fieldToUpdate in updatedFields.entries.iterator()) {
-            val castedFieldToUpdateValue = when (fieldToUpdate.key) {
-                "name" -> fieldToUpdate.value as String
-                "dateOfBirth" -> fieldToUpdate.value as LocalDate
-                "heightInMeters" -> fieldToUpdate.value as Double
-                else -> throw ResponseStatusException(HttpStatusCode.valueOf(400))
+        if (updatedFields.isNotEmpty() && !updatedFields.containsValue(null)) {
+            val cb = em.criteriaBuilder
+            val cu = cb.createCriteriaUpdate(PersonEntity::class.java)
+            val person = cu.from(PersonEntity::class.java)
+            for (fieldToUpdate in updatedFields.entries.iterator()) {
+                val castedFieldToUpdateValue = when (fieldToUpdate.key) {
+                    "name" -> fieldToUpdate.value as String
+                    "dateOfBirth" -> fieldToUpdate.value as LocalDate
+                    "heightInMeters" -> fieldToUpdate.value as Double
+                    else -> throw ResponseStatusException(HttpStatusCode.valueOf(400))
+                }
+
+                cu.set(fieldToUpdate.key, castedFieldToUpdateValue)
             }
+            cu.where(cb.equal(person.get<Int>("id"), personId))
 
-            cu.set(fieldToUpdate.key, castedFieldToUpdateValue)
+            em.createQuery(cu).executeUpdate()
+        } else {
+            throw ResponseStatusException(HttpStatusCode.valueOf(400))
         }
-        cu.where(cb.equal(person.get<Int>("id"), personId))
-
-        em.createQuery(cu).executeUpdate()
     }
 }

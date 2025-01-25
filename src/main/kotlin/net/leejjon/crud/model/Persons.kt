@@ -1,6 +1,7 @@
 package net.leejjon.crud.model
 
 import java.time.LocalDate
+import kotlin.reflect.full.memberProperties
 
 data class Persons(
     val persons: List<Person>
@@ -19,3 +20,10 @@ data class NewPerson(
     val dateOfBirth: LocalDate,
     val heightInMeters: Double
 )
+
+
+
+//fun canUpdateAttribute(attributeName: String): Boolean {
+//    val clazz = NewPerson::class
+//    return clazz.memberProperties.any{ it.name == attributeName }
+//}

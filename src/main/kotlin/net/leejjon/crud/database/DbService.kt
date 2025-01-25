@@ -8,7 +8,8 @@ import kotlin.jvm.optionals.getOrNull
 
 @Service
 class DbService(
-    private val personRepository: PersonRepository
+    private val personRepository: PersonRepository,
+    private val personCriteriaRepository: PersonCriteriaRepository
 ) {
     fun getPersonsFromDb(): List<Person> =
         personRepository.findAll().toList().map { it.toPerson() }
@@ -33,6 +34,16 @@ class DbService(
             existingPerson.dateOfBirth = person.dateOfBirth
             existingPerson.heightInMeters = person.heightInMeters
             personRepository.save(existingPerson).toPerson()
+        } else {
+            null
+        }
+    }
+
+    fun updatePersonAttributes(personId: Int, updatedFields: Map<String, Any?>): Person? {
+        personCriteriaRepository.updatePersonAttributes(personId, updatedFields)
+        val updatedPerson = personRepository.findById(personId)
+        return if (updatedPerson.isPresent) {
+            updatedPerson.get().toPerson()
         } else {
             null
         }

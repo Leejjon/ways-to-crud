@@ -5,13 +5,7 @@ import net.leejjon.crud.model.NewPerson
 import net.leejjon.crud.model.Person
 import net.leejjon.crud.model.Persons
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController("/v1")
 class PersonController(
@@ -51,6 +45,16 @@ class PersonController(
         @RequestBody person: Person
     ): ResponseEntity<Person> {
         val updatedPerson = dbService.updatePerson(person)
+        return if (updatedPerson == null) {
+            ResponseEntity.notFound().build()
+        } else {
+            ResponseEntity.ok(updatedPerson)
+        }
+    }
+
+    @PatchMapping("/v1/persons/{id}")
+    fun updatePerson(@PathVariable id: Int, @RequestBody updatedFields: Map<String, Any?>): ResponseEntity<Person> {
+        val updatedPerson = dbService.updatePersonAttributes(id, updatedFields)
         return if (updatedPerson == null) {
             ResponseEntity.notFound().build()
         } else {

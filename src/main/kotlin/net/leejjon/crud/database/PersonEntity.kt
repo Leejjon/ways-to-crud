@@ -6,6 +6,8 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import net.leejjon.crud.model.NewPerson
 import net.leejjon.crud.model.Person
+import org.springframework.http.HttpStatusCode
+import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
 
 @Entity(name = "PERSON")

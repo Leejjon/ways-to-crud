@@ -22,12 +22,15 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
+	implementation("org.jetbrains.exposed:exposed-spring-boot-starter:0.58.0")
+	implementation("org.jetbrains.exposed:exposed-java-time:0.58.0")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	// https://springdoc.org/#general-overview
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
 	implementation("io.github.oshai:kotlin-logging-jvm:7.0.0")
 
-	runtimeOnly("org.hsqldb:hsqldb")
+//	runtimeOnly("org.hsqldb:hsqldb")
+	runtimeOnly("com.h2database:h2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")

@@ -81,7 +81,7 @@ class PersonsApiIntegrationTests {
         } When {
             body(
                 """{
-                  "name": "$NEYMAR_NAME",
+                  "fullName": "$NEYMAR_NAME",
                   "dateOfBirth": "$NEYMAR_DATE_OF_BIRTH",
                   "heightInMeters": $NEYMAR_HEIGHT
                 }"""
@@ -130,7 +130,7 @@ class PersonsApiIntegrationTests {
             body("""
                 {
                   "id": "2",
-                  "name": "$NEYMAR_NAME",
+                  "fullName": "$NEYMAR_NAME",
                   "dateOfBirth": "$NEYMAR_DATE_OF_BIRTH",
                   "heightInMeters": $NEYMAR_HEIGHT
                 }

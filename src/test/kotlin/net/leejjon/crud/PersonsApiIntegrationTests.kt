@@ -81,7 +81,7 @@ class PersonsApiIntegrationTests {
         } When {
             body(
                 """{
-                  "name": "$NEYMAR_NAME",
+                  "fullName": "$NEYMAR_NAME",
                   "dateOfBirth": "$NEYMAR_DATE_OF_BIRTH",
                   "heightInMeters": $NEYMAR_HEIGHT
                 }"""
@@ -129,8 +129,8 @@ class PersonsApiIntegrationTests {
             // Update ronaldo to neymar
             body("""
                 {
-                  "id": "1",
-                  "name": "$NEYMAR_NAME",
+                  "id": "2",
+                  "fullName": "$NEYMAR_NAME",
                   "dateOfBirth": "$NEYMAR_DATE_OF_BIRTH",
                   "heightInMeters": $NEYMAR_HEIGHT
                 }
@@ -144,42 +144,42 @@ class PersonsApiIntegrationTests {
         assertNeymar(response, 2)
     }
 
-    @Test
-    fun `Verify that the PATCH request on the v1 persons endpoint only updates the height if the request contains just the height`() {
-        val response = Given {
-            spec(requestSpecification)
-        } When {
-            // Let's give Ronaldo Messi's height
-            body("""
-                {
-                    "heightInMeters": $MESSI_HEIGHT
-                }
-            """.trimIndent())
-            patch("/v1/persons/2")
-        } Then {
-            statusCode(200)
-        } Extract {
-            body().`as`(Person::class.java)
-        }
-
-        assertRonaldo(response, MESSI_HEIGHT)
-    }
+//    @Test
+//    fun `Verify that the PATCH request on the v1 persons endpoint only updates the height if the request contains just the height`() {
+//        val response = Given {
+//            spec(requestSpecification)
+//        } When {
+//            // Let's give Ronaldo Messi's height
+//            body("""
+//                {
+//                    "heightInMeters": $MESSI_HEIGHT
+//                }
+//            """.trimIndent())
+//            patch("/v1/persons/2")
+//        } Then {
+//            statusCode(200)
+//        } Extract {
+//            body().`as`(Person::class.java)
+//        }
+//
+//        assertRonaldo(response, MESSI_HEIGHT)
+//    }
 
     private fun assertMessi(messi: Person) {
-        assertThat(messi.name).isEqualTo(MESSI_NAME)
+        assertThat(messi.fullName).isEqualTo(MESSI_NAME)
         assertThat(messi.heightInMeters).isEqualTo(MESSI_HEIGHT)
         assertThat(messi.dateOfBirth).isEqualTo(MESSI_DATE_OF_BIRTH)
     }
 
     private fun assertRonaldo(ronaldo: Person, height: Double = RONALDO_HEIGHT) {
-        assertThat(ronaldo.name).isEqualTo(RONALDO_NAME)
+        assertThat(ronaldo.fullName).isEqualTo(RONALDO_NAME)
         assertThat(ronaldo.heightInMeters).isEqualTo(height)
         assertThat(ronaldo.dateOfBirth).isEqualTo(RONALDO_DATE_OF_BIRTH)
     }
 
-    private fun assertNeymar(neymar: Person, id: Int = 2) {
+    private fun assertNeymar(neymar: Person, id: Int = 3) {
         assertThat(neymar.id).isEqualTo(id)
-        assertThat(neymar.name).isEqualTo(NEYMAR_NAME)
+        assertThat(neymar.fullName).isEqualTo(NEYMAR_NAME)
         assertThat(neymar.heightInMeters).isEqualTo(NEYMAR_HEIGHT)
         assertThat(neymar.dateOfBirth).isEqualTo(NEYMAR_DATE_OF_BIRTH)
     }

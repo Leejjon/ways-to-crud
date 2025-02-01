@@ -24,54 +24,56 @@ class PersonController(
         return ResponseEntity.ok(Persons(dbService.getPersonsFromDb()))
     }
 
-//    @ApiResponses(value =
-//        [
-//            ApiResponse(responseCode = "200"),
-//            ApiResponse(responseCode = "404", description = "User not found"),
-//            ApiResponse(responseCode = "500", description = "Internal Server Error")
-//        ]
-//    )
-//    @GetMapping("/v1/persons/{id}")
-//    fun getPerson(
-//        @PathVariable
-//        id: Int
-//    ): ResponseEntity<Person> {
-//        val potentiallyExistingPerson = dbService.getPerson(id)
-//        return if (potentiallyExistingPerson.isPresent) {
-//            ResponseEntity.ok(potentiallyExistingPerson.get())
-//        } else {
-//            ResponseEntity.notFound().build()
-//        }
-//    }
-//
-//    @ApiResponses(value =
-//        [
-//            ApiResponse(responseCode = "200"),
-//            ApiResponse(responseCode = "500", description = "Internal Server Error")
-//        ]
-//    )
-//    @PostMapping("/v1/persons")
-//    fun createPerson(@RequestBody person: NewPerson): ResponseEntity<Person> {
-//        val createdPerson = dbService.createPerson(person)
-//        return ResponseEntity.ok().body(createdPerson)
-//    }
-//
-//    @ApiResponses(value =
-//        [
-//            ApiResponse(responseCode = "200"),
-//            ApiResponse(responseCode = "404", description = "User not found"),
-//            ApiResponse(responseCode = "500", description = "Internal Server Error")
-//        ]
-//    )
-//    @DeleteMapping("/v1/persons/{id}")
-//    fun deletePerson(
-//        @PathVariable id: Int
-//    ) {
-//        dbService.deletePerson(id)
-//    }
-//
-//    @PutMapping("/v1/persons")
-//    fun updatePerson(
-//        @RequestBody person: Person
-//    ): ResponseEntity<Person> = ResponseEntity.ok(dbService.updatePerson(person))
+    @ApiResponses(value =
+        [
+            ApiResponse(responseCode = "200"),
+            ApiResponse(responseCode = "404", description = "User not found"),
+            ApiResponse(responseCode = "500", description = "Internal Server Error")
+        ]
+    )
+    @GetMapping("/v1/persons/{id}")
+    fun getPerson(
+        @PathVariable
+        id: Int
+    ): ResponseEntity<Person> {
+        val potentiallyExistingPerson = dbService.getPerson(id)
+        return if (potentiallyExistingPerson != null) {
+            ResponseEntity.ok(potentiallyExistingPerson)
+        } else {
+            ResponseEntity.notFound().build()
+        }
+    }
+
+    @ApiResponses(value =
+        [
+            ApiResponse(responseCode = "200"),
+            ApiResponse(responseCode = "500", description = "Internal Server Error")
+        ]
+    )
+    @PostMapping("/v1/persons")
+    fun createPerson(@RequestBody person: NewPerson): ResponseEntity<Person> {
+        val createdPerson = dbService.createPerson(person)
+        return ResponseEntity.ok().body(createdPerson)
+    }
+
+    @ApiResponses(value =
+        [
+            ApiResponse(responseCode = "200"),
+            ApiResponse(responseCode = "404", description = "User not found"),
+            ApiResponse(responseCode = "500", description = "Internal Server Error")
+        ]
+    )
+    @DeleteMapping("/v1/persons/{id}")
+    fun deletePerson(
+        @PathVariable id: Int
+    ) {
+        dbService.deletePerson(id)
+    }
+
+    @PutMapping("/v1/persons")
+    fun updatePerson(
+        @RequestBody person: Person
+    ): ResponseEntity<Person> = ResponseEntity.ok(dbService.updatePerson(person))
+
+    // TODO: Patchmapping
 }

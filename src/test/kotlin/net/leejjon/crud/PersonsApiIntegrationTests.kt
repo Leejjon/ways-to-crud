@@ -166,20 +166,20 @@ class PersonsApiIntegrationTests {
     }
 
     private fun assertMessi(messi: Person) {
-        assertThat(messi.name).isEqualTo(MESSI_NAME)
+        assertThat(messi.fullName).isEqualTo(MESSI_NAME)
         assertThat(messi.heightInMeters).isEqualTo(MESSI_HEIGHT)
         assertThat(messi.dateOfBirth).isEqualTo(MESSI_DATE_OF_BIRTH)
     }
 
     private fun assertRonaldo(ronaldo: Person, height: Double = RONALDO_HEIGHT) {
-        assertThat(ronaldo.name).isEqualTo(RONALDO_NAME)
+        assertThat(ronaldo.fullName).isEqualTo(RONALDO_NAME)
         assertThat(ronaldo.heightInMeters).isEqualTo(height)
         assertThat(ronaldo.dateOfBirth).isEqualTo(RONALDO_DATE_OF_BIRTH)
     }
 
     private fun assertNeymar(neymar: Person, id: Int = 3) {
         assertThat(neymar.id).isEqualTo(id)
-        assertThat(neymar.name).isEqualTo(NEYMAR_NAME)
+        assertThat(neymar.fullName).isEqualTo(NEYMAR_NAME)
         assertThat(neymar.heightInMeters).isEqualTo(NEYMAR_HEIGHT)
         assertThat(neymar.dateOfBirth).isEqualTo(NEYMAR_DATE_OF_BIRTH)
     }

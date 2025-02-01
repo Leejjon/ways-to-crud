@@ -20,13 +20,13 @@ class PersonEntity(
 }
 
 fun NewPerson.toPersonEntity() = PersonEntity(
-    this.name,
+    this.fullName,
     this.dateOfBirth,
     this.heightInMeters
 )
 
 fun Person.toPersonEntity() = PersonEntity(
-    this.name,
+    this.fullName,
     this.dateOfBirth,
     this.heightInMeters
 )

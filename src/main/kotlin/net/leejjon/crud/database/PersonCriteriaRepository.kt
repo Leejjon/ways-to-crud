@@ -22,12 +22,11 @@ class PersonCriteriaRepository(
             val person = cu.from(PersonEntity::class.java)
             for (fieldToUpdate in updatedFields.entries.iterator()) {
                 val castedFieldToUpdateValue = when (fieldToUpdate.key) {
-                    "name" -> fieldToUpdate.value as String
+                    "fullName" -> fieldToUpdate.value as String
                     "dateOfBirth" -> LocalDate.parse(fieldToUpdate.value as String)
                     "heightInMeters" -> fieldToUpdate.value as Double
                     else -> throw ResponseStatusException(HttpStatusCode.valueOf(400))
                 }
-
                 cu.set(fieldToUpdate.key, castedFieldToUpdateValue)
             }
             cu.where(cb.equal(person.get<Int>("id"), personId))

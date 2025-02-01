@@ -30,7 +30,7 @@ class DbService(
         val keyHolder: KeyHolder = GeneratedKeyHolder()
         val update =
             jdbcClient.sql("INSERT INTO PERSON(FULL_NAME, DATE_OF_BIRTH, HEIGHT_IN_METERS) VALUES (?, ?, ?)")
-                .params(person.name, person.dateOfBirth, person.heightInMeters)
+                .params(person.fullName, person.dateOfBirth, person.heightInMeters)
                 .update(keyHolder)
 
         if (update == 1) {
@@ -67,7 +67,7 @@ class DbService(
     fun updatePerson(person: Person): Person {
         val update = try {
             jdbcClient.sql("UPDATE PERSON SET FULL_NAME = ?, DATE_OF_BIRTH = ?, HEIGHT_IN_METERS = ? WHERE ID = ?")
-                .params(person.name, person.dateOfBirth, person.heightInMeters, person.id)
+                .params(person.fullName, person.dateOfBirth, person.heightInMeters, person.id)
                 .update()
         } catch (e: Exception) {
             logger.error(e) { "Unable to delete person due to error with the query or connection" }

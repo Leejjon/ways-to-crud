@@ -30,7 +30,7 @@ class DbService(
 
         return if (existingPersonOptional.isPresent) {
             val existingPerson = existingPersonOptional.get()
-            existingPerson.name = person.name
+            existingPerson.fullName = person.name
             existingPerson.dateOfBirth = person.dateOfBirth
             existingPerson.heightInMeters = person.heightInMeters
             personRepository.save(existingPerson).toPerson()

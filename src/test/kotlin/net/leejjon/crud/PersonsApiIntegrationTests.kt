@@ -150,9 +150,9 @@ class PersonsApiIntegrationTests {
         assertThat(messi.dateOfBirth).isEqualTo(MESSI_DATE_OF_BIRTH)
     }
 
-    private fun assertRonaldo(ronaldo: Person) {
+    private fun assertRonaldo(ronaldo: Person, height: Double = RONALDO_HEIGHT) {
         assertThat(ronaldo.name).isEqualTo(RONALDO_NAME)
-        assertThat(ronaldo.heightInMeters).isEqualTo(RONALDO_HEIGHT)
+        assertThat(ronaldo.heightInMeters).isEqualTo(height)
         assertThat(ronaldo.dateOfBirth).isEqualTo(RONALDO_DATE_OF_BIRTH)
     }
 

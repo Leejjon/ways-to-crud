@@ -21,7 +21,7 @@ class DbService(
             .list()
 
     fun getPerson(id: Int): java.util.Optional<Person> =
-        jdbcClient.sql("SELECT * FROM PERSON WHERE id = :id")
+        jdbcClient.sql("SELECT * FROM PERSON WHERE ID = ?")
             .params(id)
             .query(PersonRowMapper())
             .optional()
@@ -29,7 +29,7 @@ class DbService(
     fun createPerson(person: NewPerson): Person? {
         val keyHolder: KeyHolder = GeneratedKeyHolder()
         val update =
-            jdbcClient.sql("INSERT INTO PERSON(name, dateOfBirth, heightInMeters) VALUES (:name, :dateOfBirth, :heightInMeters)")
+            jdbcClient.sql("INSERT INTO PERSON(FULL_NAME, DATE_OF_BIRTH, HEIGHT_IN_METERS) VALUES (?, ?, ?)")
                 .params(person.name, person.dateOfBirth, person.heightInMeters)
                 .update(keyHolder)
 
@@ -49,7 +49,7 @@ class DbService(
 
     fun deletePerson(id: Int) {
         val update = try {
-            jdbcClient.sql("DELETE FROM PERSON WHERE ID = :id")
+            jdbcClient.sql("DELETE FROM PERSON WHERE ID = ?")
                 .params(id)
                 .update()
         } catch (e: Exception) {
@@ -66,7 +66,7 @@ class DbService(
 
     fun updatePerson(person: Person): Person {
         val update = try {
-            jdbcClient.sql("UPDATE PERSON SET name = :name, dateOfBirth = :dateOfBirth, heightInMeters = :heightInMeters WHERE id = :id")
+            jdbcClient.sql("UPDATE PERSON SET FULL_NAME = ?, DATE_OF_BIRTH = ?, HEIGHT_IN_METERS = ? WHERE ID = ?")
                 .params(person.name, person.dateOfBirth, person.heightInMeters, person.id)
                 .update()
         } catch (e: Exception) {

@@ -64,7 +64,7 @@ class PersonsApiIntegrationTests {
         val response = Given {
             spec(requestSpecification)
         } When {
-            get("/v1/persons/0")
+            get("/v1/persons/1")
         } Then {
             statusCode(200)
         } Extract {
@@ -101,7 +101,7 @@ class PersonsApiIntegrationTests {
         Given {
             spec(requestSpecification)
         } When {
-            delete("/v1/persons/1")
+            delete("/v1/persons/2")
         } Then {
             statusCode(200)
         }
@@ -129,7 +129,7 @@ class PersonsApiIntegrationTests {
             // Update ronaldo to neymar
             body("""
                 {
-                  "id": "1",
+                  "id": "2",
                   "name": "$NEYMAR_NAME",
                   "dateOfBirth": "$NEYMAR_DATE_OF_BIRTH",
                   "heightInMeters": $NEYMAR_HEIGHT
@@ -141,7 +141,7 @@ class PersonsApiIntegrationTests {
         } Extract {
             body().`as`(Person::class.java)
         }
-        assertNeymar(response, 1)
+        assertNeymar(response, 2)
     }
 
     private fun assertMessi(messi: Person) {
@@ -156,7 +156,7 @@ class PersonsApiIntegrationTests {
         assertThat(ronaldo.dateOfBirth).isEqualTo(RONALDO_DATE_OF_BIRTH)
     }
 
-    private fun assertNeymar(neymar: Person, id: Int = 2) {
+    private fun assertNeymar(neymar: Person, id: Int = 3) {
         assertThat(neymar.id).isEqualTo(id)
         assertThat(neymar.name).isEqualTo(NEYMAR_NAME)
         assertThat(neymar.heightInMeters).isEqualTo(NEYMAR_HEIGHT)

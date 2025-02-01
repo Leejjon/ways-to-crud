@@ -7,10 +7,10 @@ import java.sql.ResultSet
 class PersonRowMapper : RowMapper<Person> {
     override fun mapRow(rs: ResultSet, rowNum: Int): Person {
         return Person(
-            rs.getInt("id"),
-            rs.getString("name"),
-            rs.getDate("dateOfBirth").toLocalDate(),
-            rs.getDouble("heightInMeters")
+            rs.getInt("ID"),
+            rs.getString("FULL_NAME"),
+            rs.getDate("DATE_OF_BIRTH").toLocalDate(),
+            rs.getDouble("HEIGHT_IN_METERS")
         )
     }
 }

@@ -3,15 +3,13 @@ package net.leejjon.crud.database
 import io.github.oshai.kotlinlogging.KotlinLogging
 import net.leejjon.crud.model.NewPerson
 import net.leejjon.crud.model.Person
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
 
 @Service
 class DbService {
@@ -63,26 +61,35 @@ class DbService {
         }
     }
 
-//    fun updatePerson(person: Person): Person {
-//        val update = try {
-//            jdbcClient.sql("UPDATE PERSON SET name = :name, dateOfBirth = :dateOfBirth, heightInMeters = :heightInMeters WHERE id = :id")
-//                .params(person.name, person.dateOfBirth, person.heightInMeters, person.id)
-//                .update()
-//        } catch (e: Exception) {
-//            logger.error(e) { "Unable to delete person due to error with the query or connection" }
-//            throw ResponseStatusException(HttpStatusCode.valueOf(500))
-//        }
-//        if (update == 1) {
-//            val personFromDb = getPerson(person.id)
-//            if (personFromDb.isPresent) {
-//                return personFromDb.get()
-//            } else {
-//                logger.error { "Could not update person with id $person.id" }
-//                throw ResponseStatusException(HttpStatusCode.valueOf(404))
-//            }
-//        } else {
-//            logger.error { "Could not update person with id $person.id" }
-//            throw ResponseStatusException(HttpStatusCode.valueOf(404))
-//        }
-//    }
+    fun updatePersonAttributes(personId: Int, updatedFields: Map<String, Any?>): Person = transaction {
+        val filterColumnAndValue = updatedFields.entries.map {
+            return@map when (it.key) {
+                "fullName" -> Pair(PersonEntity.fullName, it.value as String)
+                "dateOfBirth" -> Pair(PersonEntity.dateOfBirth, LocalDate.parse(it.value as String))
+                "heightInMeters" -> Pair(PersonEntity.heightInMeters, it.value as Double)
+                else -> throw ResponseStatusException(HttpStatusCode.valueOf(400))
+            }
+        }
+
+        val update = PersonEntity.update({
+            PersonEntity.id.eq(personId)
+        }) {
+            filterColumnAndValue.forEach { (column, value) ->
+                it[column as Column<Any>] = value
+            }
+        }
+
+        if (update != 1) {
+            logger.error { "Could not find person with id ${personId}" }
+            throw ResponseStatusException(HttpStatusCode.valueOf(404))
+        } else {
+            val updatedPersonFromDb = getPerson(personId)
+            if (updatedPersonFromDb != null) {
+                return@transaction updatedPersonFromDb
+            } else {
+                logger.error { "Could not update person with id $personId" }
+                throw ResponseStatusException(HttpStatusCode.valueOf(500))
+            }
+        }
+    }
 }

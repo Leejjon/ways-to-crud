@@ -144,26 +144,26 @@ class PersonsApiIntegrationTests {
         assertNeymar(response, 2)
     }
 
-//    @Test
-//    fun `Verify that the PATCH request on the v1 persons endpoint only updates the height if the request contains just the height`() {
-//        val response = Given {
-//            spec(requestSpecification)
-//        } When {
-//            // Let's give Ronaldo Messi's height
-//            body("""
-//                {
-//                    "heightInMeters": $MESSI_HEIGHT
-//                }
-//            """.trimIndent())
-//            patch("/v1/persons/2")
-//        } Then {
-//            statusCode(200)
-//        } Extract {
-//            body().`as`(Person::class.java)
-//        }
-//
-//        assertRonaldo(response, MESSI_HEIGHT)
-//    }
+    @Test
+    fun `Verify that the PATCH request on the v1 persons endpoint only updates the height if the request contains just the height`() {
+        val response = Given {
+            spec(requestSpecification)
+        } When {
+            // Let's give Ronaldo Messi's height
+            body("""
+                {
+                    "heightInMeters": $MESSI_HEIGHT
+                }
+            """.trimIndent())
+            patch("/v1/persons/2")
+        } Then {
+            statusCode(200)
+        } Extract {
+            body().`as`(Person::class.java)
+        }
+
+        assertRonaldo(response, MESSI_HEIGHT)
+    }
 
     private fun assertMessi(messi: Person) {
         assertThat(messi.fullName).isEqualTo(MESSI_NAME)

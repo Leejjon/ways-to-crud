@@ -13,6 +13,10 @@ java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
 	}
+	sourceSets["main"].java {
+		// Add the generated jOOQ source folder to the main source set
+		srcDir("$buildDir/generated-src/jooq")
+	}
 }
 
 repositories {
@@ -104,8 +108,8 @@ jooq {
 				}
 			}
 			target {
-				packageName = "com.example.generated"
-				directory = "${layout.buildDirectory}/generated-src/jooq"
+				packageName = "net.leejjon.crud.database.model"
+				directory = "$buildDir/generated-src/jooq"
 			}
 		}
 	}

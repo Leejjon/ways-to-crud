@@ -3,6 +3,8 @@ package net.leejjon.crud.database
 import io.github.oshai.kotlinlogging.KotlinLogging
 import net.leejjon.crud.model.NewPerson
 import net.leejjon.crud.model.Person
+import org.jooq.DSLContext
+import org.springframework.beans.factory.annotation.Autowired
 
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
@@ -11,7 +13,21 @@ import org.springframework.web.server.ResponseStatusException
 @Service
 class DbService {
     private val logger = KotlinLogging.logger {}
-    fun getPersonsFromDb(): List<Person> = emptyList()
+
+    @Autowired
+    lateinit var dsl: DSLContext
+
+    fun getPersonsFromDb(): List<Person> {
+        val persons = dsl.select().from(net.leejjon.crud.database.model.tables.Person.PERSON).fetch()
+        return persons.map {
+            Person(
+                it.get(net.leejjon.crud.database.model.tables.Person.PERSON.ID),
+                it.get(net.leejjon.crud.database.model.tables.Person.PERSON.FULL_NAME),
+                it.get(net.leejjon.crud.database.model.tables.Person.PERSON.DATE_OF_BIRTH),
+                it.get(net.leejjon.crud.database.model.tables.Person.PERSON.HEIGHT_IN_METERS)
+            )
+        }
+    }
 
     fun getPerson(id: Int): Person? = null
 

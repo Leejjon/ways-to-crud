@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
-import org.springframework.core.env.Environment
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import javax.sql.DataSource
@@ -20,8 +19,6 @@ import javax.sql.DataSource
 @EnableTransactionManagement
 @OpenAPIDefinition
 class WaysToCrudApplication {
-	@Autowired
-	lateinit var environment: Environment
 
 	@Autowired
 	lateinit var dataSource: DataSource
@@ -47,8 +44,7 @@ class WaysToCrudApplication {
 		jooqConfiguration.set(connectionProvider())
 		jooqConfiguration.set(DefaultExecuteListenerProvider(exceptionTransformer()))
 
-		val sqlDialectName = environment.getRequiredProperty("jooq.sql.dialect")
-		val dialect = SQLDialect.valueOf(sqlDialectName)
+		val dialect = SQLDialect.valueOf("H2")
 		jooqConfiguration.set(dialect)
 
 		return jooqConfiguration

@@ -13,7 +13,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.core.env.Environment
-import org.springframework.jdbc.core.simple.JdbcClient
 import org.springframework.jdbc.datasource.DataSourceTransactionManager
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy
 import org.springframework.transaction.annotation.EnableTransactionManagement
@@ -25,32 +24,20 @@ import javax.sql.DataSource
 @OpenAPIDefinition
 class WaysToCrudApplication {
 	@Autowired
-	private val environment: Environment? = null
+	lateinit var environment: Environment
 
 	@Autowired
-	private val dataSource: DataSource? = null
-
-//	@Bean
-//	fun dataSource(): DataSource {
-////		val dataSource = JdbcDataSource()
-////
-////		dataSource.setUrl(environment!!.getRequiredProperty("spring.datasource.url"))
-////		dataSource.user = environment.getRequiredProperty("spring.datasource.username")
-////		dataSource.password = environment.getRequiredProperty("spring.datasource.password")
-////
-////		return dataSource
-//		return dataSource!!
-//	}
+	lateinit var dataSource: DataSource
 
 //	@Bean
 //	fun transactionAwareDataSource(): TransactionAwareDataSourceProxy {
-//		return TransactionAwareDataSourceProxy(dataSource!!)
+//		return TransactionAwareDataSourceProxy(dataSource)
 //	}
-//
-//	@Bean
-//	fun transactionManager(): DataSourceTransactionManager {
-//		return DataSourceTransactionManager(dataSource!!)
-//	}
+
+	@Bean
+	fun transactionManager(): DataSourceTransactionManager {
+		return DataSourceTransactionManager(dataSource)
+	}
 
 	@Bean
 	fun connectionProvider(): DataSourceConnectionProvider {
@@ -73,7 +60,7 @@ class WaysToCrudApplication {
 		jooqConfiguration.set(connectionProvider())
 		jooqConfiguration.set(DefaultExecuteListenerProvider(exceptionTransformer()))
 
-		val sqlDialectName = environment!!.getRequiredProperty("jooq.sql.dialect")
+		val sqlDialectName = environment.getRequiredProperty("jooq.sql.dialect")
 		val dialect = SQLDialect.valueOf(sqlDialectName)
 		jooqConfiguration.set(dialect)
 

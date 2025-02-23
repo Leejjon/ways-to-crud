@@ -59,111 +59,111 @@ class PersonsApiIntegrationTests {
         assertRonaldo(response.persons.last())
     }
 
-//    @Test
-//    fun `Verify that the GET request on the v1 single person returns Messi`() {
-//        val response = Given {
-//            spec(requestSpecification)
-//        } When {
-//            get("/v1/persons/1")
-//        } Then {
-//            statusCode(200)
-//        } Extract {
-//            body().`as`(Person::class.java)
-//        }
-//
-//        assertMessi(response)
-//    }
-//
-//    @Test
-//    fun `Verify that the POST request on the v1 persons endpoint stores the user and returns 200`() {
-//        val response = Given {
-//            spec(requestSpecification)
-//        } When {
-//            body(
-//                """{
-//                  "fullName": "$NEYMAR_NAME",
-//                  "dateOfBirth": "$NEYMAR_DATE_OF_BIRTH",
-//                  "heightInMeters": $NEYMAR_HEIGHT
-//                }"""
-//            )
-//            post("/v1/persons")
-//        } Then {
-//            statusCode(200)
-//        } Extract {
-//            body().`as`(Person::class.java)
-//        }
-//
-//        assertNeymar(response)
-//    }
-//
-//    @Test
-//    fun `Verify that the DELETE request on the v1 persons endpoint deletes the user and returns 200`() {
-//        Given {
-//            spec(requestSpecification)
-//        } When {
-//            delete("/v1/persons/2")
-//        } Then {
-//            statusCode(200)
-//        }
-//
-//        // Verify if there is one less person
-//        val response = Given {
-//            spec(requestSpecification)
-//        } When {
-//            get("/v1/persons")
-//        } Then {
-//            statusCode(200)
-//        } Extract {
-//            body().`as`(Persons::class.java)
-//        }
-//
-//        assertThat(response.persons).hasSize(1)
-//        assertMessi(response.persons.first())
-//    }
-//
-//    @Test
-//    fun `Verify that the PUT request on the v1 persons endpoint updates the user and returns 200`() {
-//        val response = Given {
-//            spec(requestSpecification)
-//        } When {
-//            // Update ronaldo to neymar
-//            body("""
-//                {
-//                  "id": "2",
-//                  "fullName": "$NEYMAR_NAME",
-//                  "dateOfBirth": "$NEYMAR_DATE_OF_BIRTH",
-//                  "heightInMeters": $NEYMAR_HEIGHT
-//                }
-//            """.trimIndent())
-//            put("/v1/persons")
-//        } Then {
-//            statusCode(200)
-//        } Extract {
-//            body().`as`(Person::class.java)
-//        }
-//        assertNeymar(response, 2)
-//    }
-//
-//    @Test
-//    fun `Verify that the PATCH request on the v1 persons endpoint only updates the height if the request contains just the height`() {
-//        val response = Given {
-//            spec(requestSpecification)
-//        } When {
-//            // Let's give Ronaldo Messi's height
-//            body("""
-//                {
-//                    "heightInMeters": $MESSI_HEIGHT
-//                }
-//            """.trimIndent())
-//            patch("/v1/persons/2")
-//        } Then {
-//            statusCode(200)
-//        } Extract {
-//            body().`as`(Person::class.java)
-//        }
-//
-//        assertRonaldo(response, MESSI_HEIGHT)
-//    }
+    @Test
+    fun `Verify that the GET request on the v1 single person returns Messi`() {
+        val response = Given {
+            spec(requestSpecification)
+        } When {
+            get("/v1/persons/1")
+        } Then {
+            statusCode(200)
+        } Extract {
+            body().`as`(Person::class.java)
+        }
+
+        assertMessi(response)
+    }
+
+    @Test
+    fun `Verify that the POST request on the v1 persons endpoint stores the user and returns 200`() {
+        val response = Given {
+            spec(requestSpecification)
+        } When {
+            body(
+                """{
+                  "fullName": "$NEYMAR_NAME",
+                  "dateOfBirth": "$NEYMAR_DATE_OF_BIRTH",
+                  "heightInMeters": $NEYMAR_HEIGHT
+                }"""
+            )
+            post("/v1/persons")
+        } Then {
+            statusCode(200)
+        } Extract {
+            body().`as`(Person::class.java)
+        }
+
+        assertNeymar(response)
+    }
+
+    @Test
+    fun `Verify that the DELETE request on the v1 persons endpoint deletes the user and returns 200`() {
+        Given {
+            spec(requestSpecification)
+        } When {
+            delete("/v1/persons/2")
+        } Then {
+            statusCode(200)
+        }
+
+        // Verify if there is one less person
+        val response = Given {
+            spec(requestSpecification)
+        } When {
+            get("/v1/persons")
+        } Then {
+            statusCode(200)
+        } Extract {
+            body().`as`(Persons::class.java)
+        }
+
+        assertThat(response.persons).hasSize(1)
+        assertMessi(response.persons.first())
+    }
+
+    @Test
+    fun `Verify that the PUT request on the v1 persons endpoint updates the user and returns 200`() {
+        val response = Given {
+            spec(requestSpecification)
+        } When {
+            // Update ronaldo to neymar
+            body("""
+                {
+                  "id": "2",
+                  "fullName": "$NEYMAR_NAME",
+                  "dateOfBirth": "$NEYMAR_DATE_OF_BIRTH",
+                  "heightInMeters": $NEYMAR_HEIGHT
+                }
+            """.trimIndent())
+            put("/v1/persons")
+        } Then {
+            statusCode(200)
+        } Extract {
+            body().`as`(Person::class.java)
+        }
+        assertNeymar(response, 2)
+    }
+
+    @Test
+    fun `Verify that the PATCH request on the v1 persons endpoint only updates the height if the request contains just the height`() {
+        val response = Given {
+            spec(requestSpecification)
+        } When {
+            // Let's give Ronaldo Messi's height
+            body("""
+                {
+                    "heightInMeters": $MESSI_HEIGHT
+                }
+            """.trimIndent())
+            patch("/v1/persons/2")
+        } Then {
+            statusCode(200)
+        } Extract {
+            body().`as`(Person::class.java)
+        }
+
+        assertRonaldo(response, MESSI_HEIGHT)
+    }
 
     private fun assertMessi(messi: Person) {
         assertThat(messi.fullName).isEqualTo(MESSI_NAME)

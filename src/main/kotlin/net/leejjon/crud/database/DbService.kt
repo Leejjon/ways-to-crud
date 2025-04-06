@@ -9,6 +9,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.jdbc.support.KeyHolder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
+import java.time.format.DateTimeParseException
 
 @Service
 class DbService(
@@ -84,6 +86,30 @@ class DbService(
         } else {
             logger.error { "Could not update person with id $person.id" }
             throw ResponseStatusException(HttpStatusCode.valueOf(404))
+        }
+    }
+
+    fun updatePersonAttributes(personId: Int, updatedFields: Map<String, Any?>): Person {
+        val person = getPerson(personId)
+        if (person.isPresent) {
+            val updatedPerson = person.get().copy(
+                fullName = updatedFields["fullName"] as? String ?: person.get().fullName,
+                dateOfBirth = parseLocalDate(updatedFields["dateOfBirth"] as? String) ?: person.get().dateOfBirth,
+                heightInMeters = updatedFields["heightInMeters"] as? Double ?: person.get().heightInMeters
+            )
+            return updatePerson(updatedPerson)
+        } else {
+            logger.error { "Could not update person with id $person.id" }
+            throw ResponseStatusException(HttpStatusCode.valueOf(404))
+        }
+    }
+
+    private fun parseLocalDate(date: String?): LocalDate? {
+        if (date == null) return null
+        return try {
+            LocalDate.parse(date)
+        } catch (e: DateTimeParseException) {
+            null
         }
     }
 }
